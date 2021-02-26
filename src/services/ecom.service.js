@@ -9,7 +9,6 @@ const createNewItem = async (names) => {
       categoryData.forEach(async (item) => {
         try {
           await Product.create(item);
-          console.log(item);
         } catch (error) {
           return null;
         }
