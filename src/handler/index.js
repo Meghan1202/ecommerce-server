@@ -1,4 +1,4 @@
 const { healthHandler } = require('./health.handler');
-const { postHandler } = require('./ecom.handler');
+const { postHandler, getFeatureHandler } = require('./ecom.handler');
 
-module.exports = { healthHandler, postHandler };
+module.exports = { healthHandler, postHandler, getFeatureHandler };
