@@ -25,4 +25,15 @@ const getFeatureHandler = async (req, res) => {
   }
 };
 
-module.exports = { postHandler, getFeatureHandler };
+const getProductsByQuery = async (req, res) => {
+  const { category } = req.query;
+  const features = req.query.features.split(',');
+  const getQueryResponse = await ecomServices.productsByQuery(category, features);
+  if (getQueryResponse) {
+    res.status(200).send(getQueryResponse);
+  } else {
+    res.status(404).send('Invalid search');
+  }
+};
+
+module.exports = { postHandler, getFeatureHandler, getProductsByQuery };

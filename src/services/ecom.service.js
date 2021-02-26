@@ -39,6 +39,33 @@ const getCategoryFeatures = async (category) => {
   return featuresSet;
 };
 
+const productsByQuery = async (category, features) => {
+  if (category && features && features.length) {
+    const getItemsWithCategories = await Product.findAll({
+      where: { name_category: category },
+      raw: true,
+    });
+    const productsSearched = getItemsWithCategories.filter((item) => {
+      item.features = JSON.parse(item.features);
+      return item.features.some((feature) => features.includes(feature.value));
+    });
+    if (productsSearched.length) {
+      return productsSearched;
+    }
+    return null;
+  } if (category) {
+    const getItemsWithCategories = await Product.findAll({
+      where: { name_category: category },
+      raw: true,
+    });
+    if (getItemsWithCategories.length) {
+      return getItemsWithCategories;
+    }
+    return null;
+  }
+  return null;
+};
+
 module.exports = {
-  createNewItem, getCategoryFeatures,
+  createNewItem, getCategoryFeatures, productsByQuery,
 };
