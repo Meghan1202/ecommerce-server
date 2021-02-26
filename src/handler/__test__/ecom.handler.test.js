@@ -1,5 +1,5 @@
 const ecomServices = require('../../services/ecom.service');
-const { postHandler } = require('../ecom.handler');
+const { postHandler, getFeatureHandler } = require('../ecom.handler');
 
 describe('Post Handler', () => {
   afterEach(() => {
@@ -30,5 +30,32 @@ describe('Post Handler', () => {
     expect(spyOnCreateNewItem).toHaveBeenCalledWith('abc');
     expect(mockResponse.status).toHaveBeenCalledWith(404);
     expect(mockSend).toHaveBeenCalledWith('Items already exists');
+  });
+});
+
+describe('Get Feature Handler', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should set a status code of 200 and send distinct features', async () => {
+    const response = [{
+      color: 'hii',
+      size: 'lalal',
+      brand: 'qqq',
+    }];
+    const mockReq = {
+      query: {
+        category: 'lala',
+      },
+    };
+    const mockSend = jest.fn();
+    const mockResponse = {
+      status: jest.fn(() => ({ send: mockSend })),
+    };
+    const spyOnCategoryFeature = jest.spyOn(ecomServices, 'getCategoryFeatures').mockResolvedValue(response);
+    await getFeatureHandler(mockReq, mockResponse);
+    expect(spyOnCategoryFeature).toHaveBeenCalledWith('lala');
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockSend).toHaveBeenCalledWith(response);
   });
 });
