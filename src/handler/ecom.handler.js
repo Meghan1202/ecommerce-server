@@ -1,18 +1,12 @@
 const ecomServices = require('../services/ecom.service');
 
 const postHandler = async (req, res) => {
-  const { body } = req;
-  const postResponse = [];
-  body.names.forEach(async (category) => {
-    const response = await ecomServices.createNewItem(category);
-    if (response && response.length) {
-      postResponse.push(response);
-    }
-  });
-  if (postResponse.length) {
-    res.status(201).send(postResponse);
+  const { names } = req.body;
+  const response = await ecomServices.createNewItem(names);
+  if (response && response.length) {
+    res.status(201).send(response);
   } else {
-    res.status(404).send('Items already present');
+    res.status(404).send('Items already exists');
   }
 };
 
@@ -32,7 +26,7 @@ const getProductsByQuery = async (req, res) => {
   if (getQueryResponse) {
     res.status(200).send(getQueryResponse);
   } else {
-    res.status(404).send('Invalid search');
+    res.status(404).send('Product not found');
   }
 };
 

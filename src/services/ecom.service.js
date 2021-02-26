@@ -1,19 +1,23 @@
 const { Product } = require('../models');
 const getCategory = require('../utils/ExternalAPI');
 
-const createNewItem = async (category) => {
-  const categoryData = await getCategory.getCategoryData(category);
-  if (categoryData != null && categoryData.length) {
-    categoryData.forEach(async (item) => {
-      try {
-        await Product.create(item);
-      } catch (error) {
-        return 'Items already present!';
-      }
-    });
-    return categoryData;
-  }
-  return null;
+const createNewItem = async (names) => {
+  const postResponse = [];
+  names.forEach(async (category) => {
+    const categoryData = await getCategory.getCategoryData(category);
+    if (categoryData != null && categoryData.length) {
+      categoryData.forEach(async (item) => {
+        try {
+          await Product.create(item);
+          console.log(item);
+        } catch (error) {
+          return null;
+        }
+        postResponse.push(categoryData);
+      });
+    }
+  });
+  return postResponse;
 };
 
 const getCategoryFeatures = async (category) => {

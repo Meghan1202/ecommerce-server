@@ -8,7 +8,7 @@ const port = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use('/health', healthRouter);
-app.use('/features', ecomRouter);
+app.use('', ecomRouter);
 app.use('/products', ecomRouter);
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
