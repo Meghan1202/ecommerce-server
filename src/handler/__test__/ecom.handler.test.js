@@ -1,5 +1,5 @@
 const ecomServices = require('../../services/ecom.service');
-const { postHandler, getFeatureHandler } = require('../ecom.handler');
+const { postHandler, getFeatureHandler, getProductsByQuery } = require('../ecom.handler');
 
 describe('Post Handler', () => {
   afterEach(() => {
@@ -73,5 +73,61 @@ describe('Get Feature Handler', () => {
     expect(spyOnCategoryFeature).toHaveBeenCalledWith('lala');
     expect(mockResponse.status).toHaveBeenCalledWith(404);
     expect(mockSend).toHaveBeenCalledWith("Category doesn't exist");
+  });
+});
+
+describe('Get Product By Query', () => {
+  const mockReq = {
+    query: {
+      category: 'phone',
+      features: 'hello,hii',
+    },
+  };
+  const mockSend = jest.fn();
+  const mockResponse = {
+    status: jest.fn(() => ({ send: mockSend })),
+  };
+  const features = mockReq.query.features.split(',');
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should set the status code to 200, and sends the products fetched', async () => {
+    const mockUserResponse = [
+      {
+        id: 6,
+        _id: 'shoe_2',
+        name: 'adidas jumbo',
+        description: 'Extremely comforrtable shoes for all seasons',
+        name_category: 'shoes',
+        description_category: 'radiant shoes',
+        features: [
+          {
+            name: 'Color',
+            value: 'Blue',
+          },
+          {
+            name: 'Size',
+            value: 8,
+          },
+          {
+            name: 'Brand',
+            value: 'Adidas',
+          },
+        ],
+        createdAt: '2021-02-26T05:41:03.389Z',
+        updatedAt: '2021-02-26T05:41:03.389Z',
+      }];
+    const spyOnProductsByQuery = jest.spyOn(ecomServices, 'productsByQuery').mockResolvedValue(mockUserResponse);
+    await getProductsByQuery(mockReq, mockResponse);
+    expect(spyOnProductsByQuery).toHaveBeenCalledWith('phone', features);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockSend).toHaveBeenCalledWith(mockUserResponse);
+  });
+  it('should set status code of 404 and send product not found if item doesn\'t exist', async () => {
+    const spyOnProductsByQuery = jest.spyOn(ecomServices, 'productsByQuery').mockResolvedValue(null);
+    await getProductsByQuery(mockReq, mockResponse);
+    expect(spyOnProductsByQuery).toHaveBeenCalledWith('phone', features);
+    expect(mockResponse.status).toHaveBeenCalledWith(404);
+    expect(mockSend).toHaveBeenCalledWith('Product not found');
   });
 });
