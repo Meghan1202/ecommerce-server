@@ -38,7 +38,6 @@ const getCategoryFeatures = async (category) => {
   featuresSet.Color = Array.from(new Set(featuresSet.Color));
   featuresSet.Size = Array.from(new Set(featuresSet.Size));
   featuresSet.Brand = Array.from(new Set(featuresSet.Brand));
-  console.log(featuresSet);
   return featuresSet;
 };
 

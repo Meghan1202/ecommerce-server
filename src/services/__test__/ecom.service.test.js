@@ -37,3 +37,10 @@ describe('Create New Item', () => {
     expect(spyOnGetCategoryData).toHaveBeenCalledWith('shoe');
   });
 });
+
+describe('Get Category features', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should return the unique feature set', () => { });
+});
