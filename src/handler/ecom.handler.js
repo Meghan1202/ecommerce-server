@@ -15,7 +15,7 @@ const getFeatureHandler = async (req, res) => {
   if (uniqueFeatureOfCategory) {
     res.status(200).send(uniqueFeatureOfCategory);
   } else {
-    res.status(404).send();
+    res.status(404).send("Category doesn't exist");
   }
 };
 

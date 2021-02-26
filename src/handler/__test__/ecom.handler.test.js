@@ -58,4 +58,20 @@ describe('Get Feature Handler', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockSend).toHaveBeenCalledWith(response);
   });
+  it('should set status code of 404 if not found', async () => {
+    const mockReq = {
+      query: {
+        category: 'lala',
+      },
+    };
+    const mockSend = jest.fn();
+    const mockResponse = {
+      status: jest.fn(() => ({ send: mockSend })),
+    };
+    const spyOnCategoryFeature = jest.spyOn(ecomServices, 'getCategoryFeatures').mockResolvedValue(null);
+    await getFeatureHandler(mockReq, mockResponse);
+    expect(spyOnCategoryFeature).toHaveBeenCalledWith('lala');
+    expect(mockResponse.status).toHaveBeenCalledWith(404);
+    expect(mockSend).toHaveBeenCalledWith("Category doesn't exist");
+  });
 });
